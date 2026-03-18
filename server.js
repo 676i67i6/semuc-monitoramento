@@ -46,3 +46,6 @@ app.post("/processos", (req, res) => {
 });
 
 app.listen(3000, () => console.log("rodando"));
+
+const cors = require('cors');
+app.use(cors());
