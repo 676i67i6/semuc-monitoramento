@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SEMUC Monitoramento</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f4f6f9;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: white;
+    font-weight: bold;
+}
+
+.card {
+    background: white;
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 8px solid gray;
+    font-size: 18px;
+}
+
+.em-andamento { border-color: orange; }
+.em-analise { border-color: blue; }
+.pendente { border-color: red; }
+.finalizado { border-color: green; }
+
+.status {
+    margin-top: 10px;
+    font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <div>SEMUC | Monitoramento de Processos</div>
+    <div id="clock"></div>
+</header>
+
+<div id="lista"></div>
+
+<script>
+async function carregar() {
+    const res = await fetch("/processos");
+    const dados = await res.json();
+
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    dados.forEach(p => {
+        lista.innerHTML += `
+        <div class="card ${p.status}">
+            <div><b>${p.nome}</b></div>
+            <div>${p.origem} → ${p.destino}</div>
+            <div>${p.data}</div>
+            <div>${p.descricao}</div>
+            <div class="status">${p.status.toUpperCase()}</div>
+        </div>
+        `;
+    });
+}
+
+setInterval(carregar, 3000);
+
+function relogio() {
+    document.getElementById("clock").innerText =
+        new Date().toLocaleTimeString();
+}
+setInterval(relogio, 1000);
+
+carregar();
+</script>
+
+</body>
+</html>
